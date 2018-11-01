@@ -19,7 +19,24 @@ import java.util.List;
 /**
  * author: create by qdwang
  * date: 2018/11/1 14:02
- * described：
+ * described：使用例子
+ *  String path = Environment.getExternalStorageDirectory() + "/DCIM/Camera/IMG_20181101_174415.jpg";
+ *             Luban.builder(this).setmTargetDir(getSDPath()).load(path).setCompressListener(new CompressListener() {
+ *                 @Override
+ *                 public void onStart() {
+ *                     Log.e("qdwang====", "onStart()");
+ *                 }
+ *
+ *                 @Override
+ *                 public void onSuccess(File file) {
+ *                     Log.e("qdwang====", "onSuccess()  file = " + file.getPath());
+ *                 }
+ *
+ *                 @Override
+ *                 public void onError(Exception e) {
+ *                     Log.e("qdwang====", "onError() e = " + e.getMessage());
+ *                 }
+ *             }).build();
  */
 public class Luban implements Handler.Callback {
 
