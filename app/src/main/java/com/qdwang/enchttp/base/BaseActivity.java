@@ -1,8 +1,11 @@
-package com.qdwang.enchttp;
+package com.qdwang.enchttp.base;
 
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.qdwang.mylibrary.permission.IPermissionCallback;
 import com.qdwang.mylibrary.permission.PermissionManager;
@@ -15,7 +18,18 @@ import java.util.List;
  * date: 2018/11/1 16:42
  * described：
  */
-public class BaseActivity extends AppCompatActivity implements IPermissionCallback {
+public abstract class BaseActivity<V extends BaseView, P extends IBasePresenter<V>> extends AppCompatActivity implements BaseView, IPermissionCallback {
+
+    protected P presenter;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initPresenter();
+        presenter.onAttachedView((V) this);
+    }
+
+    protected abstract void initPresenter();
 
     @Override
     public void onPermissionGranted(int requestCode, List<String> granted) {
@@ -38,5 +52,16 @@ public class BaseActivity extends AppCompatActivity implements IPermissionCallba
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         PermissionManager.onRequestPermissionResult(requestCode, permissions, grantResults, this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.onDetachedView();
+    }
+
+    @Override
+    public void showToast(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 }
