@@ -5,11 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.widget.Toast;
 
+import com.qdwang.enchttp.App;
 import com.qdwang.mylibrary.permission.IPermissionCallback;
 import com.qdwang.mylibrary.permission.PermissionManager;
 import com.qdwang.mylibrary.permission.dialog.DialogAppSettings;
+import com.qdwang.mylibrary.skin.SkinFactory;
 
 import java.util.List;
 
@@ -21,9 +24,15 @@ import java.util.List;
 public abstract class BaseActivity<V extends BaseView, P extends IBasePresenter<V>> extends AppCompatActivity implements BaseView, IPermissionCallback {
 
     protected P presenter;
+    protected SkinFactory skinFactory;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        skinFactory = App.getApp().skinFactory;
+//        skinFactory = new SkinFactory();
+        LayoutInflater.from(this).setFactory(skinFactory);
+        skinFactory.setFactory(this);
+
         super.onCreate(savedInstanceState);
         initPresenter();
         presenter.onAttachedView((V) this);

@@ -18,6 +18,7 @@ import com.qdwang.mylibrary.compress.CompressListener;
 import com.qdwang.mylibrary.compress.Luban;
 import com.qdwang.mylibrary.permission.PermissionManager;
 import com.qdwang.mylibrary.permission.annotation.IPermission;
+import com.qdwang.mylibrary.skin.SkinsManager;
 
 import java.io.File;
 
@@ -25,53 +26,71 @@ public class MainActivity extends BaseActivity<MainView, IMainPresenter> impleme
 
     private String url = "http://v.juhe.cn/toutiao/index?type=top&key=dd87f5c7306328ecc5e07c9e0185130e";
 
-    private IMainPresenter presenter;
+//    private IMainPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+//        Toolbar toolbar = findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
     }
 
     @Override
     protected void initPresenter() {
         presenter = new MainPresenter();
-        presenter.getData();
     }
 
     public void click(View view) {
 //        requestTest();
 //        Luban.builder(this).load(new ArrayList<>()).
         requestPermissionStorage();
+//        presenter.getData();
     }
 
 
     @IPermission(100)
     private void requestPermissionStorage(){
-        if(PermissionManager.hasPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)){
+        String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+        if(PermissionManager.hasPermission(this, permissions)){
 //            openAlbm();
-            String path = Environment.getExternalStorageDirectory() + "/DCIM/Camera/IMG_20181101_174415.jpg";
-            Luban.builder(this).setmTargetDir(getSDPath()).load(path).setCompressListener(new CompressListener() {
-                @Override
-                public void onStart() {
-                    Log.e("qdwang====", "onStart()");
-                }
-
-                @Override
-                public void onSuccess(File file) {
-                    Log.e("qdwang====", "onSuccess()  file = " + file.getPath());
-                }
-
-                @Override
-                public void onError(Exception e) {
-                    Log.e("qdwang====", "onError() e = " + e.getMessage());
-                }
-            }).build();
-
+//            String path = Environment.getExternalStorageDirectory() + "/DCIM/Camera/IMG_20181101_174415.jpg";
+//            Luban.builder(this).setmTargetDir(getSDPath()).load(path).setCompressListener(new CompressListener() {
+//                @Override
+//                public void onStart() {
+//                    Log.e("qdwang====", "onStart()");
+//                }
+//
+//                @Override
+//                public void onSuccess(File file) {
+//                    Log.e("qdwang====", "onSuccess()  file = " + file.getPath());
+//                }
+//
+//                @Override
+//                public void onError(Exception e) {
+//                    Log.e("qdwang====", "onError() e = " + e.getMessage());
+//                }
+//            }).build();
+            String path = Environment.getExternalStorageDirectory() + "/skin.apk";
+            SkinsManager.getInstance().loadSkin(path);
+            skinFactory.apply();
         }else {
-            PermissionManager.requestPermissions(this, "请求sd卡读写权限", 100, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
+            PermissionManager.requestPermissions(this, "请求sd卡读写权限", 100, permissions);
         }
+    }
+
+//    @Override
+//    public View onCreateView(String name, Context context, AttributeSet attrs) {
+//        return skinFactory.onCreateView(name, context, attrs);
+//    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        String path = Environment.getExternalStorageDirectory() + "/skin.apk";
+//        SkinsManager.getInstance().loadSkin(path);
+//        skinFactory.apply();
     }
 
     private void openAlbm(){

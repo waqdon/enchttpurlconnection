@@ -15,7 +15,9 @@ public class MainPresenter extends BasePresenter<MainView> implements IMainPrese
 
     @Override
     public void getData() {
-        iBaseView.showToast("123");
+        if(iBaseView!= null){
+            iBaseView.showToast("123");
+        }
     }
 
     public void fetch(){
